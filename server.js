@@ -9,6 +9,8 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 //parse incoming JSON data
 app.use(express.json());
+
+app.use(express.static('public'));
 // middleware
 
 const { animals } = require('./data/animals');
@@ -117,6 +119,28 @@ app.post('/api/animals', (req, res) => {
     // animal is where our incoming content will be
     res.json(animal);
     }
+});
+
+// this is the route to index.html/ should respond with html page 
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+});
+
+// this is the route to animals.html/ should respond with html page ** different from 
+// using api in route/ api returns json
+app.get('/animals', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/animals.html'))
+});
+
+// same as above, but with zookeepers.html
+app.get('/zookeepers', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/zookeepers.html'))
+});
+
+// * acts as wildcard/ any previously undefined routes will redirect to homepage/ *THIS SHOULD ALWAYS
+// COME LAST if using app.get
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
 app.listen(PORT, () => {
